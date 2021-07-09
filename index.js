@@ -7,12 +7,14 @@ app.use(express.json());
 
 let Mentor = []
 let Student = []
+//Get all mentors
 app.get("/Mentor", (req, res) => {
 
     res.send(Mentor)
 
 })
 
+//get perticular mentor by id
 app.get("/Mentor/:id", (req, res) => {
     let mentor_present = 0
     for (let current_mentor = 0; current_mentor < Mentor.length; current_mentor++) {
@@ -34,18 +36,21 @@ app.get("/Mentor/:id", (req, res) => {
 
 })
 
+//get all students
 app.get("/Student", (req, res) => {
 
     res.send(Student)
 
 })
 
+//get perticular student by id
 app.get("/Student/:id", (req, res) => {
 
     res.send(Student)
 
 })
 
+//add mentor
 app.post("/Mentor", (req, res) => {
     let Duplicate_mentor = 1
     for (let current_mentor = 0; current_mentor < Mentor.length; current_mentor++) {
@@ -73,6 +78,8 @@ app.post("/Mentor", (req, res) => {
 
 })
 
+
+//add students
 app.post("/Student", (req, res) => {
     let Duplicate_student = 1
     for (let current_student = 0; current_student < Student.length; current_student++) {
@@ -101,6 +108,7 @@ app.post("/Student", (req, res) => {
 
 })
 
+//Edit details of mentor for perticular student
 app.put("/Student/:id", (req, res) => {
     let Mentor_absent = 1
     for(let current_mentor=0;current_mentor<Mentor.length;current_mentor++)
@@ -120,6 +128,7 @@ app.put("/Student/:id", (req, res) => {
     }
 })
 
+//add student name in perticular mentor
 app.put("/Mentor/:id", (req, res) => {
     let mentor_present = 0
     let list_student = req.body.metee
