@@ -1,18 +1,31 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
+const {MongoClient} = require('mongodb');
 console.log("hello")
+const uri = "mongodb+srv://pranils:Pranil@5134@cluster0.lvgym.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
+
+
 
 app.use(express.json());
 
 let Mentor = []
 let Student = []
 //Get all mentors
-app.get("/Mentor", (req, res) => {
+app.get("/Mentor", async(req, res) => {
+    let client =await MongoClient.connect(dburl)
+    let db=client.db("Test")
+    db.collection("users").find({}).toArray(function (err, data) {
+        if (err) throw err.name;
+        res.status(200).json({ data })
+    });
 
     res.send(Mentor)
 
 })
+
+
 
 //get perticular mentor by id
 app.get("/Mentor/:id", (req, res) => {
@@ -51,29 +64,44 @@ app.get("/Student/:id", (req, res) => {
 })
 
 //add mentor
-app.post("/Mentor", (req, res) => {
-    let Duplicate_mentor = 1
-    for (let current_mentor = 0; current_mentor < Mentor.length; current_mentor++) {
-        if (Mentor[current_mentor].Mentor_name == req.body.Mentor_name) {
-            Duplicate_mentor = 1
-            break;
-        }
-        else {
-            Duplicate_mentor = 0
-            continue;
-        }
-    }
-    if (!Duplicate_mentor || Mentor.length == 0) {
-        Mentor.push({
-            Mentor_name: req.body.Mentor_name,
-            metee: [],
-            Mentor_id: Mentor.length + 1
-        })
+app.post("/Mentor", async(req, res) => {
+    // let Duplicate_mentor = 1
+    // for (let current_mentor = 0; current_mentor < Mentor.length; current_mentor++) {
+    //     if (Mentor[current_mentor].Mentor_name == req.body.Mentor_name) {
+    //         Duplicate_mentor = 1
+    //         break;
+    //     }
+    //     else {
+    //         Duplicate_mentor = 0
+    //         continue;
+    //     }
+    // }
+    // if (!Duplicate_mentor || Mentor.length == 0) {
+    //     Mentor.push({
+    //         Mentor_name: req.body.Mentor_name,
+    //         metee: [],
+    //         Mentor_id: Mentor.length + 1
+    //     })
 
-        res.send("Message : 'Mentor has been created'")
+    //     res.send("Message : 'Mentor has been created'")
+    // }
+    // else {
+    //     res.send("Message : 'Mentor already present in list'")
+    // }
+    let client =await MongoClient.connect(uri)
+    try{
+    let db=client.db("project 0")
+    const data=db.collection("Mentor").insertOne(req.body)
+    res.json("record has been added")
     }
-    else {
-        res.send("Message : 'Mentor already present in list'")
+    catch(e)
+    {
+        console.log(e.name)
+        res.json("not working properly")
+    }
+    finally
+    {
+        client.close()
     }
 
 })
